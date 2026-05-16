@@ -115,6 +115,8 @@ docker compose up
 - [Docker Architecture](docs/docker.md)
   Container strategy, security controls, and build process
 
+- [Testing Strategy](docs/testing.md)
+  Test suite structure, coverage requirements, and design principles
 
 ## Status
 
@@ -122,7 +124,5 @@ Active Development
 
 ---
 
-Patience Nzekwe
-DevOps Engineer
-GitHub: github.com/patiencenzekwe
-LinkedIn: linkedin.com/in/patiencenzekwe
+**Patience Nzekwe** — DevOps Engineer  
+[GitHub](https://github.com/patiencenzekwe) · [LinkedIn](https://linkedin.com/in/patiencenzekwe)
