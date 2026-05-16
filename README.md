@@ -106,10 +106,15 @@ docker compose up
 
 ## Documentation
 
-Further documentation covering architecture decisions,
-infrastructure cost management, security controls,
-and operational runbooks is available in the docs
-directory.
+- [Architecture Decisions](docs/architecture-decisions.md)
+  Technology choices and the reasoning behind each decision
+
+- [API Reference](docs/api.md)
+  Complete endpoint documentation with request and response formats
+
+- [Docker Architecture](docs/docker.md)
+  Container strategy, security controls, and build process
+
 
 ## Status
 
