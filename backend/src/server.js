@@ -60,10 +60,12 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Vaultline API running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`Health check: http://localhost:${PORT}/api/health`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Vaultline API running on port ${PORT}`);
+        console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`Health check: http://localhost:${PORT}/api/health`);
+    });
+}
 
 module.exports = app;
