@@ -8,19 +8,18 @@ with the minimum permissions required to operate.
 
 ## Multi-Stage Build
 
-The backend Dockerfile uses two stages:
+The backend Dockerfile uses two stages.
 
-Stage 1 — Builder
-Installs production npm dependencies using npm ci for
-reproducible installs. This stage contains npm, build
-tools, and cache — none of which belong in production.
+Stage 1 is the builder stage. It installs production npm
+dependencies using npm ci for reproducible installs. This
+stage contains npm, build tools, and cache. None of these
+belong in production.
 
-Stage 2 — Production
-Starts from a fresh Node 24 Alpine image. Copies only
-the node_modules from the builder stage. Copies
-application source code. Removes any .env file. Switches
-to a non-root user. The final image contains only what
-is needed to run the application.
+Stage 2 is the production stage. It starts from a fresh
+Node 24 Alpine image, copies only the node_modules from
+the builder stage, copies application source code, removes
+any .env file, and switches to a non-root user. The final
+image contains only what is needed to run the application.
 
 ## Security Controls
 
@@ -29,14 +28,14 @@ user with UID 1001. Root access is never granted inside
 any container.
 
 Secret exclusion: The .dockerignore file prevents .env
-from entering the build context. The Dockerfile
-additionally removes any .env with rm -f as a second
-layer of protection.
+from entering the build context. The Dockerfile also
+removes any .env with rm -f as a second layer of
+protection.
 
 Minimal attack surface: Alpine Linux base images contain
-only the packages required to run Node.js — no shell
-utilities, package managers, or debugging tools in
-production images.
+only the packages required to run Node.js. No shell
+utilities, package managers, or debugging tools are
+included in production images.
 
 Health checks: Every container includes a HEALTHCHECK
 instruction. Kubernetes uses this to determine pod health
@@ -45,7 +44,7 @@ and automatically restart unhealthy containers.
 ## Local Development
 
 docker-compose.dev.yml provides the local development
-environment with:
+environment with the following services.
 
 PostgreSQL 18 Alpine database with automatic schema
 initialisation from schema.sql on first startup.
@@ -54,7 +53,7 @@ Port mapping exposes PostgreSQL on localhost:5432 for
 direct database inspection during development.
 
 Named volumes persist database data between container
-restarts — data is not lost when containers stop.
+restarts. Data is not lost when containers stop.
 
 ## Image Naming
 
@@ -63,8 +62,8 @@ Staging: ECR_URL/vaultline-backend:COMMIT_SHA
 Production: ECR_URL/vaultline-backend:COMMIT_SHA
 
 Images are tagged with the Git commit SHA in all
-non-local environments — providing complete traceability
-between deployed images and source code.
+non-local environments. This provides complete
+traceability between deployed images and source code.
 
 ## Commands
 

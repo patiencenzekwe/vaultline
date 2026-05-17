@@ -3,7 +3,7 @@
 ## Base URL
 
 Local development: http://localhost:3001
-Production: https://api.vaultline.co.uk (when deployed)
+Production: https://api.vaultline.co.uk
 
 ## Authentication
 
@@ -13,7 +13,8 @@ Authorization header:
 Authorization: Bearer YOUR_TOKEN
 
 Tokens are issued on login and expire after 24 hours.
-Tokens contain the user ID and email — never the password.
+Tokens contain the user ID and email. The password is
+never included in a token.
 
 ## Rate Limiting
 
@@ -30,7 +31,8 @@ with £1,000 demo balance automatically.
 
 Request body:
 - email: string, valid email format, required
-- password: string, min 8 chars, uppercase, number, special character required
+- password: string, min 8 chars, uppercase, number,
+  special character required
 - full_name: string, min 2 chars, required
 - phone: string, optional
 
@@ -49,7 +51,7 @@ Response 200: token, user object
 Response 401: invalid credentials
 
 GET /api/auth/profile
-Get the authenticated user's profile.
+Get the authenticated user profile.
 Requires: Authorization header
 
 Response 200: user object
@@ -101,8 +103,8 @@ Response 400: insufficient funds or same account
 Response 404: account not found
 
 GET /api/transfers
-List all transfers involving the authenticated user's
-accounts — both sent and received.
+List all transfers involving the authenticated user
+accounts, both sent and received.
 Requires: Authorization header
 
 Response 200: transfers array
@@ -110,7 +112,7 @@ Response 200: transfers array
 ### Health
 
 GET /api/health
-Health check endpoint. Used by Kubernetes liveness and
+Health check endpoint used by Kubernetes liveness and
 readiness probes. No authentication required.
 
 Response 200: status, service name, timestamp, environment
@@ -119,12 +121,12 @@ Response 200: status, service name, timestamp, environment
 
 200: Success
 201: Created successfully
-400: Bad request — validation error or business rule
-401: Unauthorised — missing or invalid token
-403: Forbidden — authenticated but not permitted
+400: Bad request. Validation failure or business rule violation
+401: Unauthorised. Missing or invalid token
+403: Forbidden. Authenticated but not permitted to access this resource
 404: Resource not found
-409: Conflict — resource already exists
-429: Too many requests — rate limit exceeded
+409: Conflict. Resource already exists
+429: Too many requests. Rate limit exceeded
 500: Internal server error
 
 ## Security Headers

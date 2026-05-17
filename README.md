@@ -118,6 +118,9 @@ docker compose up
 - [Testing Strategy](docs/testing.md)
   Test suite structure, coverage requirements, and design principles
 
+- [Infrastructure](docs/infrastructure.md)
+  AWS resources, Terraform structure, and provisioning commands
+
 ## Status
 
 Active Development
