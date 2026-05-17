@@ -13,6 +13,7 @@ eu-west-2 — London
 
 ## Terraform Structure
 
+```
 infrastructure/terraform/
 ├── providers.tf   — AWS provider and version constraints
 ├── variables.tf   — input variables with validation
@@ -22,6 +23,7 @@ infrastructure/terraform/
     ├── vpc/       — networking infrastructure
     ├── ecr/       — container image registry
     └── rds/       — PostgreSQL database
+```
 
 ## Resources Provisioned
 
