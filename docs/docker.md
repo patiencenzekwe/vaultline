@@ -57,9 +57,11 @@ restarts. Data is not lost when containers stop.
 
 ## Image Naming
 
-Local development: vaultline-backend:latest
-Staging: ECR_URL/vaultline-backend:COMMIT_SHA
+```
+Local:      vaultline-backend:latest
+Staging:    ECR_URL/vaultline-backend:COMMIT_SHA
 Production: ECR_URL/vaultline-backend:COMMIT_SHA
+```
 
 Images are tagged with the Git commit SHA in all
 non-local environments. This provides complete
@@ -68,16 +70,31 @@ traceability between deployed images and source code.
 ## Commands
 
 Build the backend image:
+
+```bash
 docker build -t vaultline-backend:latest backend/
+```
 
 Start local development environment:
+
+```bash
 docker compose -f docker-compose.dev.yml up -d
+```
 
 Stop local development environment:
+
+```bash
 docker compose -f docker-compose.dev.yml down
+```
 
 View container logs:
+
+```bash
 docker logs vaultline-backend
+```
 
 Inspect running containers:
+
+```bash
 docker compose -f docker-compose.dev.yml ps
+```

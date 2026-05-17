@@ -53,8 +53,10 @@ Automatic vulnerability scanning on every image push.
 Lifecycle policy retains the last 10 images and expires
 older ones automatically to control storage costs.
 
+```
 Repository: vaultline-backend
-Region: eu-west-2
+Region:     eu-west-2
+```
 
 ### RDS
 
@@ -68,10 +70,12 @@ for 7 days. Deletion protection enabled.
 
 Every AWS resource created by Terraform carries these tags:
 
+```
 Project:     vaultline
 Environment: production
 ManagedBy:   terraform
 Owner:       patience-nzekwe
+```
 
 This enables cost tracking, resource filtering, and
 audit trails across all Vaultline infrastructure.
@@ -79,13 +83,25 @@ audit trails across all Vaultline infrastructure.
 ## Terraform Commands
 
 Initialise working directory:
+
+```bash
 terraform init
+```
 
 Preview changes before applying:
+
+```bash
 terraform plan
+```
 
 Apply infrastructure changes:
+
+```bash
 terraform apply
+```
 
 Destroy all resources:
+
+```bash
 terraform destroy
+```

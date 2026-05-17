@@ -29,9 +29,9 @@ The platform runs on AWS EKS with Istio service mesh
 enforcing mutual TLS between all services. PostgreSQL
 on RDS Multi-AZ handles transactional data with automatic
 failover. ElastiCache Redis manages session state.
-HashiCorp Vault handles all secret management with
-dynamic credential generation and automatic rotation.
-Amazon ECR stores all container images.
+HashiCorp Vault handles all secret management with dynamic
+credential generation and automatic rotation. Amazon ECR
+stores all container images.
 
 ## Delivery Pipeline
 
@@ -39,9 +39,8 @@ Infrastructure is provisioned via Terraform across three
 environments. ArgoCD implements GitOps continuous delivery,
 reconciling the cluster state against the Git repository
 on every commit. GitHub Actions runs the CI/CD pipeline
-using OIDC federation to AWS, eliminating static
-credentials entirely. Helm charts package all Kubernetes
-workloads.
+using OIDC federation to AWS, eliminating static credentials
+entirely. Helm charts package all Kubernetes workloads.
 
 ## Security Controls
 
@@ -62,8 +61,8 @@ Prometheus collects metrics from all cluster workloads.
 Grafana provides dashboards covering transaction success
 rates, API latency, infrastructure cost, and security
 events. The ELK Stack aggregates logs from all services
-into a centralised searchable store. OpenTelemetry
-provides distributed tracing across the microservices.
+into a centralised searchable store. OpenTelemetry provides
+distributed tracing across the microservices.
 
 ## Multi-Environment Strategy
 
@@ -78,22 +77,29 @@ configuration with Multi-AZ redundancy.
 Every commit to the main branch triggers the following
 automated pipeline. No manual steps are required for
 deployment.
+
+```
 Code Push → Terraform Validate → Checkov Scan
-→ Unit Tests → Docker Image Build
-→ Trivy Scan → Push to ECR
-→ ArgoCD Sync → Health Verification
-→ Deployment Complete
+         → Unit Tests → Docker Image Build
+         → Trivy Scan → Push to ECR
+         → ArgoCD Sync → Health Verification
+         → Deployment Complete
+```
 
 Authentication to AWS uses OIDC federation. No static
 AWS credentials are stored in the pipeline at any point.
 
 ## AWS Services
 
-The platform uses the following AWS services across
-compute, database, networking, security, and monitoring:
-EKS, EC2, RDS, ElastiCache, ECR, ALB, Route53,
-NAT Gateway, VPC, IAM, GuardDuty, WAF, CloudTrail,
-Security Hub, KMS, Secrets Manager, S3 and CloudWatch.
+```
+Compute:    EKS, EC2
+Database:   RDS, ElastiCache
+Networking: ALB, Route53, NAT Gateway, VPC
+Security:   IAM, GuardDuty, WAF, CloudTrail,
+            Security Hub, KMS, Secrets Manager
+Storage:    ECR, S3
+Monitoring: CloudWatch
+```
 
 ## Local Development
 
@@ -127,5 +133,7 @@ Active Development
 
 ---
 
-**Patience Nzekwe** — DevOps Engineer  
-[GitHub](https://github.com/patiencenzekwe) · [LinkedIn](https://linkedin.com/in/patiencenzekwe)
+Patience Nzekwe
+DevOps Engineer
+GitHub: github.com/patiencenzekwe
+LinkedIn: linkedin.com/in/patiencenzekwe
