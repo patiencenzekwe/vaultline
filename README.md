@@ -12,6 +12,11 @@ observable, and highly available Kubernetes architecture
 with full GitOps delivery and an automated DevSecOps
 pipeline.
 
+Users can register accounts, view balances across current
+and savings accounts, transfer funds between accounts with
+real-time balance updates, and view complete transaction
+history with reference numbers.
+
 ## Application Architecture
 
 The platform follows a microservices architecture with
@@ -93,12 +98,21 @@ AWS credentials are stored in the pipeline at any point.
 
 ```
 Compute:    EKS, EC2
-Database:   RDS, ElastiCache
+Database:   RDS PostgreSQL, ElastiCache Redis
 Networking: ALB, Route53, NAT Gateway, VPC
 Security:   IAM, GuardDuty, WAF, CloudTrail,
             Security Hub, KMS, Secrets Manager
-Storage:    ECR, S3
+Storage:    S3, ECR 
 Monitoring: CloudWatch
+```
+
+## Infrastructure Status
+
+```
+VPC:  Live — eu-west-2 London — 10.0.0.0/16
+ECR:  Live — vaultline-backend repository
+EKS:  Live — vaultline-cluster — Kubernetes 1.33 — 2 nodes Ready
+RDS:  Live — PostgreSQL 17.4 — Multi-AZ
 ```
 
 ## Local Development
@@ -106,9 +120,22 @@ Monitoring: CloudWatch
 ```bash
 git clone git@github.com:patiencenzekwe/vaultline.git
 cd vaultline
-cp .env.example .env
-docker compose up
+cp backend/.env.example backend/.env
+docker compose -f docker-compose.dev.yml up -d
+cd backend && npm install && npm run dev
 ```
+
+API available at http://localhost:3001/api/health
+
+## Running Tests
+
+```bash
+cd backend
+npm test
+```
+
+20 tests across four suites. 77% line coverage. Coverage
+gate enforced at 70%.
 
 ## Documentation
 
@@ -133,7 +160,5 @@ Active Development
 
 ---
 
-Patience Nzekwe
-DevOps Engineer
-GitHub: github.com/patiencenzekwe
-LinkedIn: linkedin.com/in/patiencenzekwe
+**Patience Nzekwe** — DevOps Engineer  
+[GitHub](https://github.com/patiencenzekwe) · [LinkedIn](https://linkedin.com/in/patiencenzekwe)

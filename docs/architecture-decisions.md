@@ -128,3 +128,21 @@ docker-entrypoint-initdb.d and executes automatically on
 first startup, eliminating manual database setup entirely.
 This ensures every developer gets an identical local
 environment regardless of their machine configuration.
+
+### Kubernetes Version
+Kubernetes 1.33 was selected for the EKS cluster. Version
+1.35 was not selected because it removes cgroup v1 support,
+which is a breaking change requiring node AMI verification
+before adoption. Version 1.32 was not selected because it
+is moving toward extended support which carries additional
+per-node-hour charges. Version 1.33 is on standard support
+until approximately September 2027 and is the version most
+UK production engineering teams are running in 2026.
+
+### EKS Node Size
+t3.medium was selected over t3.micro for EKS worker nodes.
+A t3.micro instance has 1GB of RAM. Kubernetes system
+components consume approximately 650MB leaving only 350MB
+for application pods. Vaultline runs five microservices
+and requires at least 4GB of node memory to operate
+reliably. t3.medium provides 4GB with sufficient headroom.
