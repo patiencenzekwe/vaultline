@@ -22,6 +22,7 @@ infrastructure/terraform/
 └── modules/
     ├── vpc/       — networking infrastructure
     ├── ecr/       — container image registry
+    ├── eks/       — Kubernetes cluster and node group
     └── rds/       — PostgreSQL database
 ```
 
