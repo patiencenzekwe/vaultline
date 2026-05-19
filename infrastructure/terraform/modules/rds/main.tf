@@ -55,9 +55,8 @@ resource "aws_db_instance" "main" {
   multi_az            = true
   publicly_accessible = false
 
-  skip_final_snapshot       = false
-  final_snapshot_identifier = "${var.project_name}-final-snapshot"
-  deletion_protection       = true
+  skip_final_snapshot = true
+  deletion_protection = false
 
   backup_retention_period = 7
   backup_window           = "03:00-04:00"
