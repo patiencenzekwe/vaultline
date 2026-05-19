@@ -99,6 +99,23 @@ A ClusterIP Service exposes the backend internally on port
 3001. External traffic will be routed through NGINX Ingress
 in a later lesson.
 
+### ArgoCD
+
+ArgoCD is installed in the argocd namespace and manages
+all Vaultline application deployments via GitOps. The
+Application manifest at kubernetes/argocd-app.yaml defines
+the source repository, target cluster, and sync policy.
+
+Automated sync is enabled with prune and selfHeal. Prune
+ensures resources deleted from Git are removed from the
+cluster. SelfHeal ensures manual cluster changes are
+reverted to match Git. The cluster state always reflects
+the repository state.
+
+ArgoCD polls the main branch every three minutes. Any
+commit to kubernetes/vaultline-backend triggers an
+automatic reconciliation.ß
+
 ### RDS
 
 PostgreSQL 17.4 on db.t3.micro with Multi-AZ deployment.

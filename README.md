@@ -109,11 +109,12 @@ Monitoring: CloudWatch
 ## Infrastructure Status
 
 ```
-VPC:  Live — eu-west-2 London — 10.0.0.0/16
-ECR:  Live — vaultline-backend repository
-EKS:  Live — vaultline-cluster — Kubernetes 1.33 — 2 nodes Ready
-K8s:  Live — vaultline-backend deployed — vaultline namespace — 0 restarts
-RDS:  Live — PostgreSQL 17.4 — Multi-AZ
+VPC:     Live — eu-west-2 London — 10.0.0.0/16
+ECR:     Live — vaultline-backend repository
+EKS:     Live — vaultline-cluster — Kubernetes 1.33 — 2 nodes Ready
+K8s:     Live — vaultline-backend deployed — vaultline namespace — 0 restarts
+ArgoCD:  Live — GitOps sync enabled — Healthy and Synced
+RDS:     Live — PostgreSQL 17.4 — Multi-AZ
 ```
 
 ## Local Development
