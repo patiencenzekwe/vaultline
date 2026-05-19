@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultline-backend
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/patiencenzekwe/vaultline.git
+    targetRevision: main
+    path: kubernetes/vaultline-backend
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vaultline
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
