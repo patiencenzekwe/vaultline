@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: 238016802725.dkr.ecr.eu-west-2.amazonaws.com/vaultline-backend
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3001
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+
+nodeEnv: production

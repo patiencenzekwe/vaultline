@@ -59,14 +59,6 @@ Repository: vaultline-backend
 Region:     eu-west-2
 ```
 
-### RDS
-
-PostgreSQL 17.4 on db.t3.micro with Multi-AZ deployment.
-Provisioned after EKS cluster is available. The security
-group restricts database access to EKS worker nodes only.
-Storage encrypted at rest. Automated backups retained
-for 7 days. Deletion protection enabled.
-
 ### EKS
 
 Kubernetes 1.33 cluster across two availability zones. The
@@ -91,6 +83,29 @@ controllerManager, and scheduler.
 The node security group ID is passed directly to the RDS
 security group, ensuring database access is restricted to
 EKS worker nodes only.
+
+### Kubernetes
+
+Namespace vaultline isolates all Vaultline workloads from
+system namespaces. The backend is deployed via Helm chart
+and managed as a Helm release.
+
+The Deployment runs one replica with liveness and readiness
+probes on /api/health. The health endpoint is exempt from
+rate limiting to prevent Kubernetes probes triggering 429
+responses and causing false restarts.
+
+A ClusterIP Service exposes the backend internally on port
+3001. External traffic will be routed through NGINX Ingress
+in a later lesson.
+
+### RDS
+
+PostgreSQL 17.4 on db.t3.micro with Multi-AZ deployment.
+Provisioned after EKS cluster is available. The security
+group restricts database access to EKS worker nodes only.
+Storage encrypted at rest. Automated backups retained
+for 7 days. Deletion protection enabled.
 
 ## Default Tags
 

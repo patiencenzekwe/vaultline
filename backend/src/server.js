@@ -27,10 +27,6 @@ const limiter = rateLimit({
     }
 });
 
-app.use(limiter);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
@@ -39,6 +35,10 @@ app.get('/api/health', (req, res) => {
         environment: process.env.NODE_ENV || 'development'
     });
 });
+
+app.use(limiter);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);

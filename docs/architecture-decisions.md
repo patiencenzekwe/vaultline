@@ -135,9 +135,7 @@ Kubernetes 1.33 was selected for the EKS cluster. Version
 which is a breaking change requiring node AMI verification
 before adoption. Version 1.32 was not selected because it
 is moving toward extended support which carries additional
-per-node-hour charges. Version 1.33 is on standard support
-until approximately September 2027 and is the version most
-UK production engineering teams are running in 2026.
+per-node-hour charges. Version 1.33 is on standard support until July 29, 2026, and remains a sound choice for the current build. A planned upgrade to 1.34 will be completed before the project launch.
 
 ### EKS Node Size
 t3.medium was selected over t3.micro for EKS worker nodes.

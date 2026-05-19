@@ -98,3 +98,18 @@ Inspect running containers:
 ```bash
 docker compose -f docker-compose.dev.yml ps
 ```
+
+Build for EKS (linux/amd64):
+
+```bash
+docker buildx build \
+  --platform linux/amd64 \
+  --tag ECR_URL:latest \
+  --push \
+  backend/
+```
+
+EKS worker nodes run on EC2 t3.medium which uses the x86_64
+architecture. Images built on Apple Silicon (arm64) must
+target linux/amd64 explicitly or the pod will fail with
+ImagePullBackOff on EKS nodes.
