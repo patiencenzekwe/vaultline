@@ -155,5 +155,5 @@ fixes will be issued. Deploying an unpatched ingress controller on a
 banking platform is unacceptable regardless of existing adoption.
 
 The F5 controller is actively maintained, supports Kubernetes 1.27
-through 1.35, and provides the same core functionality. Version 5.4.1
+through 1.35, and provides the same core functionality. Version 5.4.2
 is the current stable release.
