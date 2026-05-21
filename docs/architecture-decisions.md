@@ -144,3 +144,16 @@ components consume approximately 650MB leaving only 350MB
 for application pods. Vaultline runs five microservices
 and requires at least 4GB of node memory to operate
 reliably. t3.medium provides 4GB with sufficient headroom.
+
+### NGINX Ingress Controller
+
+The F5 maintained NGINX Ingress Controller (nginx/kubernetes-ingress)
+was selected over the Kubernetes community ingress-nginx project
+(kubernetes/ingress-nginx). The community project reached end of life
+in March 2026, the repository is archived, and no further security
+fixes will be issued. Deploying an unpatched ingress controller on a
+banking platform is unacceptable regardless of existing adoption.
+
+The F5 controller is actively maintained, supports Kubernetes 1.27
+through 1.35, and provides the same core functionality. Version 5.4.1
+is the current stable release.
