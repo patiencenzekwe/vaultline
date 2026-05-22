@@ -114,8 +114,13 @@ ECR:     Live — vaultline-backend repository
 EKS:     Live — vaultline-cluster — Kubernetes 1.33 — 2 nodes Ready
 K8s:     Live — vaultline-backend deployed — vaultline namespace — 0 restarts
 ArgoCD:  Live — GitOps sync enabled — Healthy and Synced
+Ingress: Live — F5 NGINX Ingress Controller 5.4.2 — NLB
+TLS:     Live — Let's Encrypt production certificate — api.vaultline.uk
+DNS:     Live — ExternalDNS managing Route53 — vaultline.uk
 RDS:     Live — PostgreSQL 17.4 — Multi-AZ
 ```
+
+Live API: https://api.vaultline.uk/api/health
 
 ## Local Development
 

@@ -96,8 +96,33 @@ rate limiting to prevent Kubernetes probes triggering 429
 responses and causing false restarts.
 
 A ClusterIP Service exposes the backend internally on port
-3001. External traffic will be routed through NGINX Ingress
-in a later lesson.
+3001. External traffic is routed through NGINX Ingress
+at api.vaultline.uk.
+
+### NGINX Ingress
+
+F5 NGINX Ingress Controller 5.4.2 is installed in the
+nginx-ingress namespace and manages external traffic into
+the cluster. A Network Load Balancer is provisioned
+automatically by AWS when the controller starts. All HTTP
+traffic is redirected to HTTPS.
+
+### Cert-Manager
+
+Cert-Manager v1.19.4 is installed in the cert-manager
+namespace and provisions TLS certificates automatically
+from Let's Encrypt. The DNS-01 challenge solver is used
+with Route53, requiring no HTTP ingress access for
+certificate validation. Certificates renew automatically
+before expiry. IRSA is used for Route53 access.
+
+### ExternalDNS
+
+ExternalDNS v0.21.0 is installed in the external-dns
+namespace and automatically manages Route53 DNS records
+based on Kubernetes Ingress resources. When the load
+balancer address changes, ExternalDNS updates the DNS
+record automatically. IRSA is used for Route53 access.
 
 ### ArgoCD
 
@@ -114,7 +139,7 @@ the repository state.
 
 ArgoCD polls the main branch every three minutes. Any
 commit to kubernetes/vaultline-backend triggers an
-automatic reconciliation.ß
+automatic reconciliation.
 
 ### RDS
 

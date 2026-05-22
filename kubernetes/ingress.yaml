@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vaultline-ingress
+  namespace: vaultline
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.org/proxy-connect-timeout: "30s"
+    nginx.org/proxy-read-timeout: "30s"
+    nginx.org/redirect-to-https: "true"
+    nginx.org/hsts: "true"
+    nginx.org/hsts-max-age: "31536000"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.vaultline.uk
+      secretName: vaultline-tls
+  rules:
+    - host: api.vaultline.uk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vaultline-backend
+                port:
+                  number: 3001

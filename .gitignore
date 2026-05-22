@@ -169,3 +169,7 @@ logs/
 
 # OS
 .DS_Store
+*-policy.json
+*-trust-policy.json
+*-values.yaml
+*.tfstate.*.backup

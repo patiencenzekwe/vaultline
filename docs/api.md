@@ -4,7 +4,7 @@
 
 ```
 Local development: http://localhost:3001
-Production:        https://api.vaultline.co.uk
+Production:        https://api.vaultline.uk
 ```
 
 ## Authentication

@@ -35,7 +35,7 @@ than CloudFormation.
 
 ### Terraform Module Structure
 Terraform infrastructure is organised into separate modules
-for VPC, ECR, and RDS. Each module is self-contained with
+for VPC, ECR, EKS, and RDS. Each module is self-contained with
 its own variables, main configuration, and outputs. This
 separation ensures changes to the database configuration
 cannot accidentally affect networking resources, and each
