@@ -65,6 +65,13 @@ and the industry standard for secrets management in
 financial services environments. Dynamic credentials
 eliminate long-lived static secrets entirely.
 
+Vault is deployed on Kubernetes using the official Helm chart
+version 0.31.0 running Vault 1.20.4. The database secrets engine
+generates dynamic PostgreSQL credentials with a one hour TTL.
+Kubernetes auth allows pods to authenticate using their service
+account tokens without static credentials. Audit logging records
+every secret access to /vault/audit/vault-audit.log.
+
 ### Container Runtime
 Docker with multi-stage builds was selected for
 containerisation. The multi-stage pattern uses a builder

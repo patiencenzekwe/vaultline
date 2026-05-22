@@ -130,6 +130,25 @@ dynamically. Trust policies are recreated automatically
 on every terraform apply, eliminating manual updates when
 the cluster is rebuilt.
 
+### Vault
+
+HashiCorp Vault 1.20.4 is installed in the vault namespace using the
+official Helm chart. Vault runs in standalone mode with persistent
+storage on EBS volumes provisioned by the AWS EBS CSI driver.
+
+The database secrets engine connects to RDS PostgreSQL and generates
+dynamic credentials on demand. Each credential set has a one hour TTL
+and is automatically revoked on expiry. No static database passwords
+exist in the application.
+
+Kubernetes auth allows vaultline-backend pods to authenticate using
+their service account token. The vaultline-app policy grants read
+access to database credentials only. Audit logging writes all
+operations to a persistent EBS volume.
+
+Vault must be manually unsealed after each restart using three of the
+five unseal keys generated during initialisation.
+
 ### ArgoCD
 
 ArgoCD is installed in the argocd namespace and manages
