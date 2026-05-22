@@ -173,3 +173,4 @@ logs/
 *-trust-policy.json
 *-values.yaml
 *.tfstate.*.backup
+vault-init.json
