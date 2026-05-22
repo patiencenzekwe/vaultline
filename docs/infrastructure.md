@@ -124,6 +124,12 @@ based on Kubernetes Ingress resources. When the load
 balancer address changes, ExternalDNS updates the DNS
 record automatically. IRSA is used for Route53 access.
 
+The ExternalDNS and Cert-Manager IAM roles are managed by
+Terraform and reference the EKS OIDC provider ARN
+dynamically. Trust policies are recreated automatically
+on every terraform apply, eliminating manual updates when
+the cluster is rebuilt.
+
 ### ArgoCD
 
 ArgoCD is installed in the argocd namespace and manages
