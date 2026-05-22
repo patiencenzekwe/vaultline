@@ -174,3 +174,5 @@ logs/
 *-values.yaml
 *.tfstate.*.backup
 vault-init.json
+db-config.json
+vault-policy.hcl
