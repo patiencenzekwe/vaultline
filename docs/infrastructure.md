@@ -166,6 +166,20 @@ ArgoCD polls the main branch every three minutes. Any
 commit to kubernetes/vaultline-backend triggers an
 automatic reconciliation.
 
+### Istio
+
+Istio 1.30.0 is installed in the istio-system namespace using the
+minimal profile. Sidecar injection is enabled on the vaultline
+namespace. The Envoy proxy is injected automatically into every pod.
+
+Strict mutual TLS is enforced via PeerAuthentication. All pod-to-pod
+traffic in the vaultline namespace is encrypted and authenticated at
+the infrastructure layer without application code changes.
+
+A DestinationRule configures circuit breaking for vaultline-backend
+with outlier detection. Kiali v2.26.0 is installed for service mesh
+observability and traffic graph visualisation.
+
 ### RDS
 
 PostgreSQL 17.4 on db.t3.micro with Multi-AZ deployment.

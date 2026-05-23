@@ -57,6 +57,13 @@ layer without requiring application code changes. Traffic
 management capabilities enable canary deployments and
 circuit breaking for system resilience.
 
+Istio 1.30.0 is installed using the minimal profile on EKS. Strict
+mTLS is enforced in the vaultline namespace via PeerAuthentication.
+The DestinationRule configures circuit breaking with outlier detection.
+A pod returning five consecutive errors is ejected from the load
+balancer for 30 seconds. Kiali v2.26.0 provides service mesh
+observability and traffic visualisation.
+
 ### Secrets Management
 HashiCorp Vault was selected over AWS Secrets Manager
 because Vault provides dynamic secret generation, automatic

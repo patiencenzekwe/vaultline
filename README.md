@@ -118,6 +118,7 @@ Ingress: Live — F5 NGINX Ingress Controller 5.4.2 — NLB
 TLS:     Live — Let's Encrypt production certificate — api.vaultline.uk
 DNS:     Live — ExternalDNS managing Route53 — vaultline.uk
 Vault:   Live — Vault 1.20.4 — dynamic database credentials enabled
+Istio:   Live — Istio 1.30.0 — strict mTLS enforced — Kiali running
 RDS:     Live — PostgreSQL 17.4 — Multi-AZ
 ```
 
