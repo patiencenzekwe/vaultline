@@ -162,6 +162,14 @@ gate enforced at 70%.
 - [Infrastructure](docs/infrastructure.md)
   AWS resources, Terraform structure, and provisioning commands
 
+## Screenshots
+
+**ArgoCD — GitOps deployment synced and healthy**
+![ArgoCD](docs/screenshots/argocd-synced.png)
+
+**Kiali — Service mesh with mutual TLS enforced**
+![Kiali](docs/screenshots/kiali-overview.png)
+
 ## Status
 
 Active Development

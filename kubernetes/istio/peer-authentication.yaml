@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: vaultline-mtls
+  namespace: vaultline
+spec:
+  mtls:
+    mode: STRICT
