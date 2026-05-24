@@ -188,6 +188,17 @@ group restricts database access to EKS worker nodes only.
 Storage encrypted at rest. Automated backups retained
 for 7 days. Deletion protection enabled.
 
+The production schema is initialised by running schema.sql from inside
+the cluster using a temporary PostgreSQL pod. RDS is in a private
+subnet and is not accessible from outside the VPC.
+
+Database credentials are stored in the vaultline-db-secret Kubernetes
+Secret and injected as environment variables into the vaultline-backend
+pod. The JWT secret is stored separately in the vaultline-jwt-secret
+Kubernetes Secret. SSL is enforced on all RDS connections when NODE_ENV
+is set to production.
+
+
 ## Default Tags
 
 Every AWS resource created by Terraform carries these tags:
