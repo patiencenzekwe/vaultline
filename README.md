@@ -146,6 +146,15 @@ npm test
 20 tests across four suites. 77% line coverage. Coverage
 gate enforced at 70%.
 
+## Seeding Demo Data
+
+```bash
+node scripts/seed.js
+```
+
+Seeds James Harrison and Sarah Mitchell with realistic transaction
+history against the live API at https://api.vaultline.uk.
+
 ## Documentation
 
 - [Architecture Decisions](docs/architecture-decisions.md)

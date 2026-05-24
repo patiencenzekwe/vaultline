@@ -198,6 +198,19 @@ pod. The JWT secret is stored separately in the vaultline-jwt-secret
 Kubernetes Secret. SSL is enforced on all RDS connections when NODE_ENV
 is set to production.
 
+### Data Seeding
+
+The scripts/seed.js script seeds the production database with
+realistic user data via the live API. Running the script creates
+James Harrison and Sarah Mitchell with five transfers between their
+accounts. The script runs against https://api.vaultline.uk and
+requires the full stack to be running before execution.
+
+Run after every cluster rebuild:
+
+```bash
+node scripts/seed.js
+```
 
 ## Default Tags
 
