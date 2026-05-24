@@ -10,17 +10,15 @@ const getTransactions = async (req, res) => {
         );
 
         if (accountCheck.rows.length === 0) {
-            return res.status(403).json({
-                error: 'Access denied to this account.'
-            });
+            return res.status(403).json({ error: 'Access denied to this account.' });
         }
 
         const result = await pool.query(
             `SELECT id, type, amount, balance_after, description, reference, created_at
-       FROM transactions
-       WHERE account_id = $1
-       ORDER BY created_at DESC
-       LIMIT $2 OFFSET $3`,
+             FROM transactions
+             WHERE account_id = $1
+             ORDER BY created_at DESC
+             LIMIT $2 OFFSET $3`,
             [account_id, limit, offset]
         );
 
@@ -32,13 +30,57 @@ const getTransactions = async (req, res) => {
                 count: result.rows.length
             }
         });
-
     } catch (err) {
         console.error('Get transactions error:', err);
-        res.status(500).json({
-            error: 'Failed to retrieve transactions.'
-        });
+        res.status(500).json({ error: 'Failed to retrieve transactions.' });
     }
 };
 
-module.exports = { getTransactions };
+const exportTransactions = async (req, res) => {
+    try {
+        const { account_id } = req.query;
+
+        const accountCheck = await pool.query(
+            'SELECT id, account_number, account_type FROM accounts WHERE id = $1 AND user_id = $2',
+            [account_id, req.user.id]
+        );
+
+        if (accountCheck.rows.length === 0) {
+            return res.status(403).json({ error: 'Access denied to this account.' });
+        }
+
+        const result = await pool.query(
+            `SELECT type, amount, balance_after, description, reference, created_at
+             FROM transactions
+             WHERE account_id = $1
+             ORDER BY created_at DESC`,
+            [account_id]
+        );
+
+        const account = accountCheck.rows[0];
+        const rows = result.rows;
+
+        const csvHeader = 'Date,Type,Amount (GBP),Balance After (GBP),Description,Reference\n';
+        const csvRows = rows.map(tx => {
+            const date = new Date(tx.created_at).toLocaleDateString('en-GB');
+            const type = tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
+            const amount = parseFloat(tx.amount).toFixed(2);
+            const balance = parseFloat(tx.balance_after).toFixed(2);
+            const desc = `"${(tx.description || '').replace(/"/g, '""')}"`;
+            return `${date},${type},${amount},${balance},${desc},${tx.reference}`;
+        }).join('\n');
+
+        const csv = csvHeader + csvRows;
+        const filename = `vaultline-statement-${account.account_type}-${new Date().toISOString().split('T')[0]}.csv`;
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.send(csv);
+
+    } catch (err) {
+        console.error('Export transactions error:', err);
+        res.status(500).json({ error: 'Failed to export transactions.' });
+    }
+};
+
+module.exports = { getTransactions, exportTransactions };

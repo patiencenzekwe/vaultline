@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Transfer from './pages/Transfer';
 import Transactions from './pages/Transactions';
 import Settings from './pages/Settings';
+import Savings from './pages/Savings';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="transfer" element={<Transfer />} />
         <Route path="transactions" element={<Transactions />} />
+        <Route path="savings" element={<Savings />} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
