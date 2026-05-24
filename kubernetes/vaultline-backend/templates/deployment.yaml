@@ -26,6 +26,31 @@ spec:
               value: {{ .Values.nodeEnv }}
             - name: APP_PORT
               value: "3001"
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vaultline-db-secret
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vaultline-db-secret
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: vaultline-db-secret
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: vaultline-db-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vaultline-db-secret
+                  key: DB_PASSWORD  
           resources:
             requests:
               memory: {{ .Values.resources.requests.memory }}
