@@ -10,6 +10,7 @@ const transactionRoutes = require('./routes/transactions');
 const transferRoutes = require('./routes/transfers');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.APP_PORT || 3001;
 
 app.use(helmet());
