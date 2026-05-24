@@ -171,3 +171,21 @@ banking platform is unacceptable regardless of existing adoption.
 The F5 controller is actively maintained, supports Kubernetes 1.27
 through 1.35, and provides the same core functionality. Version 5.4.2
 is the current stable release.
+
+### CI/CD Pipeline
+
+GitHub Actions runs the automated pipeline on every push to main.
+OIDC federation eliminates static AWS credentials entirely. The
+pipeline authenticates to AWS by assuming VaultlineGitHubActionsRole
+via a short-lived token issued by GitHub's identity provider.
+
+Trivy is installed directly from the official GitHub release rather
+than via the aquasecurity/trivy-action GitHub Action, which was
+compromised in March 2026 with 75 of 76 version tags force-pushed
+to deliver credential-stealing malware. Downloading the binary
+directly and verifying against a pinned version is the safer approach.
+
+Checkov scans Terraform on every commit with soft_fail enabled.
+Findings are reported without blocking the pipeline during the
+current build phase. The exit code will be hardened to fail on
+critical findings before launch.

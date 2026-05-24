@@ -212,6 +212,18 @@ Run after every cluster rebuild:
 node scripts/seed.js
 ```
 
+### CI/CD Pipeline
+
+GitHub Actions runs the automated pipeline on every push and pull
+request to the main branch. The pipeline has four stages: Terraform
+validate, Checkov security scan, Jest tests with a PostgreSQL service
+container, and Docker image build and push to ECR.
+
+Authentication to AWS uses OIDC federation via the GitHub Actions
+identity provider registered in IAM. The VaultlineGitHubActionsRole
+is assumed using a short-lived token. No static AWS credentials are
+stored in the repository at any point.
+
 ## Default Tags
 
 Every AWS resource created by Terraform carries these tags:

@@ -119,6 +119,7 @@ TLS:     Live — Let's Encrypt production certificate — api.vaultline.uk
 DNS:     Live — ExternalDNS managing Route53 — vaultline.uk
 Vault:   Live — Vault 1.20.4 — dynamic database credentials enabled
 Istio:   Live — Istio 1.30.0 — strict mTLS enforced — Kiali running
+CI/CD:   Live — GitHub Actions — OIDC federation — no static credentials
 RDS:     Live — PostgreSQL 17.4 — Multi-AZ — schema migrated
 ```
 
@@ -146,7 +147,7 @@ npm test
 20 tests across four suites. 77% line coverage. Coverage
 gate enforced at 70%.
 
-## Seeding Demo Data
+## Seeding Platform Data
 
 ```bash
 node scripts/seed.js
