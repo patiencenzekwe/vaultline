@@ -10,13 +10,27 @@ const transactionRoutes = require('./routes/transactions');
 const transferRoutes = require('./routes/transfers');
 
 const app = express();
-app.set('trust proxy', 1);
-const PORT = process.env.APP_PORT || 3001;
 
+const PORT = process.env.APP_PORT || 3001;
+app.set('trust proxy', 1);
 app.use(helmet());
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'http://localhost:3000',
+            'https://vaultline.uk',
+            'https://www.vaultline.uk',
+            process.env.FRONTEND_URL
+        ].filter(Boolean);
+
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
