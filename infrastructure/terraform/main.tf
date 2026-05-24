@@ -230,7 +230,7 @@ resource "aws_iam_role" "github_actions" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:ann-adam/vaultline:*"
+            "token.actions.githubusercontent.com:sub" = "repo:patiencenzekwe/vaultline:*"
           }
         }
       }
