@@ -35,16 +35,29 @@ export const authService = {
     login: (data: { email: string; password: string }) =>
         api.post('/api/auth/login', data),
     profile: () => api.get('/api/auth/profile'),
+    updateProfile: (data: { full_name: string; phone?: string }) =>
+        api.put('/api/auth/profile', data),
+    changePassword: (data: { current_password: string; new_password: string }) =>
+        api.put('/api/auth/change-password', data),
+    getSessions: () => api.get('/api/auth/sessions'),
 };
 
 export const accountService = {
     getAccounts: () => api.get('/api/accounts'),
     getAccount: (id: string) => api.get(`/api/accounts/${id}`),
+    getSpending: (accountId: string) =>
+        api.get(`/api/accounts/spending?account_id=${accountId}`),
+    getLimits: (accountId: string) =>
+        api.get(`/api/accounts/${accountId}/limits`),
 };
 
 export const transactionService = {
     getTransactions: (accountId: string, limit = 20, offset = 0) =>
         api.get(`/api/transactions?account_id=${accountId}&limit=${limit}&offset=${offset}`),
+    exportTransactions: (accountId: string) =>
+        api.get(`/api/transactions/export?account_id=${accountId}`, {
+            responseType: 'blob',
+        }),
 };
 
 export const transferService = {

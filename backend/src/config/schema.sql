@@ -49,3 +49,16 @@ CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON accounts(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_account_id ON transactions(account_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_from_account ON transfers(from_account_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_to_account ON transfers(to_account_id);
+
+CREATE TABLE IF NOT EXISTS savings_goals (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  target_amount DECIMAL(15,2) NOT NULL CHECK (target_amount > 0),
+  saved_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+  color VARCHAR(7) NOT NULL DEFAULT '#8B5CF6',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_savings_goals_user_id ON savings_goals(user_id);
