@@ -54,6 +54,15 @@ resource "aws_eks_cluster" "main" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "eks_cluster" {
+  name              = "/aws/eks/${var.project_name}-cluster/cluster"
+  retention_in_days = 7
+
+  tags = {
+    Name = "${var.project_name}-eks-logs"
+  }
+}
+
 data "aws_iam_policy_document" "eks_nodes_assume_role" {
   statement {
     effect = "Allow"
