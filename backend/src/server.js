@@ -9,6 +9,7 @@ const accountRoutes = require('./routes/accounts');
 const transactionRoutes = require('./routes/transactions');
 const transferRoutes = require('./routes/transfers');
 const savingsRoutes = require('./routes/savings');
+const beneficiariesRoutes = require('./routes/beneficiaries');
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/transfers', transferRoutes);
 app.use('/api/savings', savingsRoutes);
+app.use('/api/beneficiaries', beneficiariesRoutes);
 
 app.use((req, res) => {
     res.status(404).json({

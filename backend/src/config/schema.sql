@@ -62,3 +62,14 @@ CREATE TABLE IF NOT EXISTS savings_goals (
 );
 
 CREATE INDEX IF NOT EXISTS idx_savings_goals_user_id ON savings_goals(user_id);
+
+CREATE TABLE IF NOT EXISTS beneficiaries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  account_number VARCHAR(20) NOT NULL,
+  account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_beneficiaries_user_id ON beneficiaries(user_id);
