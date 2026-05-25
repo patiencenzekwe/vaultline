@@ -63,11 +63,20 @@ export const transactionService = {
 export const transferService = {
     createTransfer: (data: {
         from_account_id: string;
-        to_account_id: string;
+        to_account_id?: string;
+        to_account_number?: string;
+        to_sort_code?: string;
         amount: number;
         description?: string;
     }) => api.post('/api/transfers', data),
     getTransfers: () => api.get('/api/transfers'),
+};
+
+export const beneficiaryService = {
+    getBeneficiaries: () => api.get('/api/beneficiaries'),
+    createBeneficiary: (data: { name: string; account_number: string; account_id?: string }) =>
+        api.post('/api/beneficiaries', data),
+    deleteBeneficiary: (id: string) => api.delete(`/api/beneficiaries/${id}`),
 };
 
 export default api;

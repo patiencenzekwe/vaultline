@@ -46,3 +46,11 @@ export interface AuthContextType {
     logout: () => void;
     isAuthenticated: boolean;
 }
+
+export interface Beneficiary {
+    id: string;
+    name: string;
+    account_number: string;
+    account_id: string | null;
+    created_at: string;
+}
