@@ -1,6 +1,7 @@
 # Vaultline Architecture Decisions
 
 ## Overview
+
 Vaultline is a cloud-native banking platform built on AWS EKS
 implementing security controls and operational practices
 consistent with enterprise financial services infrastructure.
@@ -8,6 +9,7 @@ consistent with enterprise financial services infrastructure.
 ## Technology Decisions
 
 ### Container Orchestration
+
 AWS EKS was selected over ECS because EKS provides full
 Kubernetes compatibility, allowing workloads to remain
 portable across cloud providers. ECS creates AWS vendor
@@ -17,6 +19,7 @@ banking platforms requiring multi-region deployments and
 complex service networking.
 
 ### Database
+
 PostgreSQL on RDS Multi-AZ was selected over DynamoDB
 because banking transactions require ACID compliance.
 Partial updates to account balances cannot be tolerated
@@ -26,6 +29,7 @@ Multi-AZ configuration provides automatic failover with
 near-zero RPO and recovery time under two minutes.
 
 ### Infrastructure as Code
+
 Terraform was selected over CloudFormation because Terraform
 is cloud-agnostic with broader industry adoption and a
 larger module ecosystem. Terraform state management, module
@@ -34,6 +38,7 @@ operational control over complex Kubernetes infrastructure
 than CloudFormation.
 
 ### Terraform Module Structure
+
 Terraform infrastructure is organised into separate modules
 for VPC, ECR, EKS, and RDS. Each module is self-contained with
 its own variables, main configuration, and outputs. This
@@ -42,6 +47,7 @@ cannot accidentally affect networking resources, and each
 module can be tested and applied independently.
 
 ### Continuous Delivery
+
 ArgoCD was selected over Jenkins for deployments because
 ArgoCD implements GitOps. The desired state of the
 Kubernetes cluster is stored in Git and continuously
@@ -50,6 +56,7 @@ a complete audit trail of every deployment, and enables
 automatic rollback on failed deployments.
 
 ### Service Mesh
+
 Istio was selected to enforce mutual TLS between all
 microservices, ensuring zero unencrypted internal
 communication. Istio enforces this at the infrastructure
@@ -65,6 +72,7 @@ balancer for 30 seconds. Kiali v2.26.0 provides service mesh
 observability and traffic visualisation.
 
 ### Secrets Management
+
 HashiCorp Vault was selected over AWS Secrets Manager
 because Vault provides dynamic secret generation, automatic
 rotation, and detailed audit logging. It is cloud-agnostic
@@ -77,9 +85,10 @@ version 0.31.0 running Vault 1.20.4. The database secrets engine
 generates dynamic PostgreSQL credentials with a one hour TTL.
 Kubernetes auth allows pods to authenticate using their service
 account tokens without static credentials. Audit logging records
-every secret access to /vault/audit/vault-audit.log.
+every secret access to `/vault/audit/vault-audit.log`.
 
 ### Container Runtime
+
 Docker with multi-stage builds was selected for
 containerisation. The multi-stage pattern uses a builder
 stage to install dependencies and a separate production
@@ -94,6 +103,7 @@ the application. This limits the blast radius of any
 container compromise.
 
 ### Node.js Version
+
 Node.js 24 LTS was selected as the container runtime.
 LTS versions receive security patches for 30 months.
 Node 26 was not selected because it does not become LTS
@@ -101,6 +111,7 @@ until October 2026. Production workloads require
 long-term security support guarantees.
 
 ### API Security
+
 express-rate-limit was implemented at 100 requests per
 15-minute window per IP address. This prevents credential
 stuffing and brute force attacks on authentication endpoints
@@ -112,6 +123,7 @@ clickjacking, cross-site scripting, and information
 disclosure without requiring manual header configuration.
 
 ### Password Policy
+
 Passwords require a minimum of 8 characters, at least one
 uppercase letter, one number, and one special character.
 bcrypt with 12 salt rounds was selected for password
@@ -121,49 +133,53 @@ attacks computationally expensive while keeping login
 response times under 300 milliseconds.
 
 ### Transfer Limits
+
 Single transfers are capped at £10,000. This mirrors
 standard UK retail banking transaction limits and provides
 a fraud prevention layer at the application level,
 independent of any infrastructure controls.
 
 ### Database Transaction Integrity
+
 All fund transfer operations use PostgreSQL transactions
-with BEGIN, COMMIT, and ROLLBACK. Account rows are locked
-with FOR UPDATE during transfers to prevent race conditions
+with `BEGIN`, `COMMIT`, and `ROLLBACK`. Account rows are locked
+with `FOR UPDATE` during transfers to prevent race conditions
 when two transfers attempt to use the same account
 simultaneously. This ensures ACID compliance. Either all
-five operations in a transfer succeed together or none
-of them happen.
+operations in a transfer succeed together or none of them happen.
 
 ### Local Development Environment
-Docker Compose with PostgreSQL 18 Alpine was selected for
-local development. The schema.sql file mounts into
-docker-entrypoint-initdb.d and executes automatically on
-first startup, eliminating manual database setup entirely.
-This ensures every developer gets an identical local
-environment regardless of their machine configuration.
+
+Docker Compose with PostgreSQL Alpine was selected for
+local development. The `schema.sql` file is applied manually
+on first setup, ensuring every developer gets an identical
+local environment regardless of their machine configuration.
 
 ### Kubernetes Version
+
 Kubernetes 1.33 was selected for the EKS cluster. Version
 1.35 was not selected because it removes cgroup v1 support,
 which is a breaking change requiring node AMI verification
 before adoption. Version 1.32 was not selected because it
 is moving toward extended support which carries additional
-per-node-hour charges. Version 1.33 is on standard support until July 29, 2026, and remains a sound choice for the current build. A planned upgrade to 1.34 will be completed before the project launch.
+per-node-hour charges. Version 1.33 is on standard support
+until July 2026. Upgrade to 1.34 is planned before the
+standard support window closes.
 
 ### EKS Node Size
+
 t3.medium was selected over t3.micro for EKS worker nodes.
 A t3.micro instance has 1GB of RAM. Kubernetes system
 components consume approximately 650MB leaving only 350MB
-for application pods. Vaultline runs five microservices
-and requires at least 4GB of node memory to operate
-reliably. t3.medium provides 4GB with sufficient headroom.
+for application pods. Vaultline requires at least 4GB of
+node memory to operate reliably. t3.medium provides 4GB
+with sufficient headroom.
 
 ### NGINX Ingress Controller
 
-The F5 maintained NGINX Ingress Controller (nginx/kubernetes-ingress)
+The F5 maintained NGINX Ingress Controller (`nginx/kubernetes-ingress`)
 was selected over the Kubernetes community ingress-nginx project
-(kubernetes/ingress-nginx). The community project reached end of life
+(`kubernetes/ingress-nginx`). The community project reached end of life
 in March 2026, the repository is archived, and no further security
 fixes will be issued. Deploying an unpatched ingress controller on a
 banking platform is unacceptable regardless of existing adoption.
@@ -176,16 +192,66 @@ is the current stable release.
 
 GitHub Actions runs the automated pipeline on every push to main.
 OIDC federation eliminates static AWS credentials entirely. The
-pipeline authenticates to AWS by assuming VaultlineGitHubActionsRole
+pipeline authenticates to AWS by assuming `VaultlineGitHubActionsRole`
 via a short-lived token issued by GitHub's identity provider.
 
 Trivy is installed directly from the official GitHub release rather
-than via the aquasecurity/trivy-action GitHub Action, which was
+than via the `aquasecurity/trivy-action` GitHub Action, which was
 compromised in March 2026 with 75 of 76 version tags force-pushed
 to deliver credential-stealing malware. Downloading the binary
 directly and verifying against a pinned version is the safer approach.
 
-Checkov scans Terraform on every commit with soft_fail enabled.
-Findings are reported without blocking the pipeline during the
-current build phase. The exit code will be hardened to fail on
-critical findings before launch.
+Checkov scans Terraform on every commit with `soft_fail` enabled.
+Findings are reported without blocking the pipeline. The exit code
+will be hardened to fail on critical findings before launch.
+
+### Frontend Framework
+
+React 19 with Vite 8 was selected over Create React App which is
+deprecated. The React team officially recommends Vite for
+client-side single-page applications. Vite 8 provides faster builds,
+better TypeScript integration, and a smaller footprint than
+webpack-based tooling.
+
+React 19 is the current stable release as of 2026. New projects
+targeting production deployments in 2026 use React 19.
+
+### Frontend Hosting
+
+S3 with CloudFront was selected over hosting the React application
+inside EKS. Static assets do not require a running pod. S3 plus
+CloudFront is the standard production architecture for single-page
+applications -- lower operational overhead, globally distributed,
+no Kubernetes resource consumption, and no pod lifecycle management
+required. EKS is reserved for dynamic workloads.
+
+ACM certificates for CloudFront must be provisioned in `us-east-1`
+regardless of where the distribution or origin is located. This is
+an AWS constraint. A separate Terraform provider alias for `us-east-1`
+handles this correctly.
+
+### Transfer Input Method
+
+Transfers accept UK sort code and account number rather than internal
+database UUIDs. Exposing UUIDs to users is an implementation detail
+that breaks the user experience and reveals internal architecture.
+The UK Faster Payments scheme uses sort code in `XX-XX-XX`
+format and account number. The backend resolves the destination account
+by `account_number` internally, keeping UUIDs hidden from users entirely.
+
+### Beneficiaries
+
+A dedicated beneficiaries table stores saved payees. Saved payees
+are standard in UK retail banking and eliminate the need to re-enter
+payment details for repeat transfers.
+Duplicate prevention is enforced at the database level. The feature
+is exposed through the `/api/beneficiaries` resource with full CRUD.
+
+### CloudWatch Log Retention
+
+EKS cluster logs have no retention policy by default. Without a
+retention policy, logs accumulate indefinitely, increasing storage
+costs without operational benefit. A 7-day retention policy is set
+on the `/aws/eks/vaultline-cluster/cluster` log group and managed via
+Terraform. Seven days provides adequate operational visibility for
+incident investigation and routine log analysis.
