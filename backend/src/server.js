@@ -10,6 +10,7 @@ const transactionRoutes = require('./routes/transactions');
 const transferRoutes = require('./routes/transfers');
 const savingsRoutes = require('./routes/savings');
 const beneficiariesRoutes = require('./routes/beneficiaries');
+const { register, metricsMiddleware } = require('./middleware/metrics');
 
 const app = express();
 
@@ -26,7 +27,6 @@ app.use(cors({
             'https://www.vaultline.uk',
             process.env.FRONTEND_URL
         ].filter(Boolean);
-
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -53,9 +53,15 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
+
 app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(metricsMiddleware);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);

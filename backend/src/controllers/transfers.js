@@ -1,8 +1,9 @@
 const pool = require('../config/database');
+const { transferTotal, transferAmount } = require('../middleware/metrics');
 
 const createTransfer = async (req, res) => {
   const { from_account_id, to_account_id, to_account_number, to_sort_code, amount, description } = req.body;
-  const transferAmount = parseFloat(amount);
+  const transferAmountValue = parseFloat(amount);
 
   const client = await pool.connect();
 
@@ -16,6 +17,7 @@ const createTransfer = async (req, res) => {
 
     if (fromAccount.rows.length === 0) {
       await client.query('ROLLBACK');
+      transferTotal.inc({ status: 'failed' });
       return res.status(404).json({ error: 'Source account not found.' });
     }
 
@@ -34,29 +36,33 @@ const createTransfer = async (req, res) => {
       );
     } else {
       await client.query('ROLLBACK');
+      transferTotal.inc({ status: 'failed' });
       return res.status(400).json({ error: 'Recipient account ID or account number is required.' });
     }
 
     if (toAccountResult.rows.length === 0) {
       await client.query('ROLLBACK');
+      transferTotal.inc({ status: 'failed' });
       return res.status(404).json({ error: 'Recipient account not found. Please check the account number and sort code.' });
     }
 
     const toAccount = toAccountResult.rows[0];
     const resolvedToAccountId = toAccount.id;
 
-    if (parseFloat(fromAccount.rows[0].balance) < transferAmount) {
+    if (parseFloat(fromAccount.rows[0].balance) < transferAmountValue) {
       await client.query('ROLLBACK');
+      transferTotal.inc({ status: 'insufficient_funds' });
       return res.status(400).json({ error: 'Insufficient funds.' });
     }
 
     if (from_account_id === resolvedToAccountId) {
       await client.query('ROLLBACK');
+      transferTotal.inc({ status: 'failed' });
       return res.status(400).json({ error: 'Cannot transfer to the same account.' });
     }
 
-    const newFromBalance = parseFloat(fromAccount.rows[0].balance) - transferAmount;
-    const newToBalance = parseFloat(toAccount.balance) + transferAmount;
+    const newFromBalance = parseFloat(fromAccount.rows[0].balance) - transferAmountValue;
+    const newToBalance = parseFloat(toAccount.balance) + transferAmountValue;
 
     await client.query(
       'UPDATE accounts SET balance = $1, updated_at = NOW() WHERE id = $2',
@@ -73,23 +79,26 @@ const createTransfer = async (req, res) => {
     await client.query(
       `INSERT INTO transactions (account_id, type, amount, balance_after, description, reference)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [from_account_id, 'debit', transferAmount, newFromBalance, description || 'Transfer', reference]
+      [from_account_id, 'debit', transferAmountValue, newFromBalance, description || 'Transfer', reference]
     );
 
     await client.query(
       `INSERT INTO transactions (account_id, type, amount, balance_after, description, reference)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [resolvedToAccountId, 'credit', transferAmount, newToBalance, description || 'Transfer', `${reference}-CR`]
+      [resolvedToAccountId, 'credit', transferAmountValue, newToBalance, description || 'Transfer', `${reference}-CR`]
     );
 
     const transfer = await client.query(
       `INSERT INTO transfers (from_account_id, to_account_id, amount, description, status)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [from_account_id, resolvedToAccountId, transferAmount, description || 'Transfer', 'completed']
+      [from_account_id, resolvedToAccountId, transferAmountValue, description || 'Transfer', 'completed']
     );
 
     await client.query('COMMIT');
+
+    transferTotal.inc({ status: 'success' });
+    transferAmount.observe(transferAmountValue);
 
     res.status(201).json({
       message: 'Transfer completed successfully.',
@@ -101,6 +110,7 @@ const createTransfer = async (req, res) => {
 
   } catch (err) {
     await client.query('ROLLBACK');
+    transferTotal.inc({ status: 'error' });
     console.error('Transfer error:', err);
     res.status(500).json({ error: 'Transfer failed. Please try again.' });
   } finally {
